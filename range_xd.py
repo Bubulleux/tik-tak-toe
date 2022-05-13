@@ -4,7 +4,6 @@ class RangeXD:
         self.end = False
         for _arg in args:
             if type(_arg) == tuple:
-                print(_arg[0], "_arg[0]")
                 if len(_arg) == 1:
                     self.ranges.append((0, _arg[0], 1))
                 elif len(_arg) == 2:
@@ -23,7 +22,6 @@ class RangeXD:
                 self.counter.append(_range[0])
             else:
                 self.counter.append(0)
-
 
     def next(self, index):
         if index >= len(self.ranges) or index < 0:
