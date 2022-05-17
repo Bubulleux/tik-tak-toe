@@ -21,6 +21,7 @@ LINES = [
     (2, 0, -1, 1),
 ]
 
+
 def get_best_play(board):
     empty_cells = []
     play_a = 0

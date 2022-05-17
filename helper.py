@@ -10,6 +10,7 @@ SYMBOLS = {
     -1: "O"
 }
 
+
 def get_random_board(plays_count):
     output = {(x, y): 0 for x, y in RangeXD(3, 3)}
     empty_cell = [(x, y) for x,y in RangeXD(3, 3)]
@@ -18,8 +19,6 @@ def get_random_board(plays_count):
         empty_cell.remove(cell)
         output[cell] = (-1) ** i
     return output
-
-
 
 
 def get_board_hash(board, rotated=False):
@@ -55,16 +54,27 @@ def offset_string(input_string, offset):
     return output
 
 
-def get_string_ascii(board):
+def get_string_ascii(board, plays=None):
     line = "+-+-+-+"
     output = line
+    cell_content = {}
+    print(board, "\n", plays)
+    if plays is None:
+        plays = {}
+
+    for pos, value in board.items():
+        if pos in plays:
+            cell_content[pos] = str(round(plays[pos], 3)).center(7)
+        else:
+            cell_content[pos] = SYMBOLS[value].center(7)
+
     for row in range(3):
-        output += f"\n|{SYMBOLS[board[0, row]]}|{SYMBOLS[board[1, row]]}|{SYMBOLS[board[2, row]]}|\n{line}"
+        output += f"\n|{cell_content[0, row]}|{cell_content[1, row]}|{cell_content[2, row]}|\n{line}"
     return output
 
 
-def print_board(board):
-    print(get_string_ascii(board))
+def print_board(board, plays=None):
+    print(get_string_ascii(board, plays=plays))
 
 
 def get_board(string_board):

@@ -19,7 +19,7 @@ WIN_LINES = [
 ]
 
 
-def get_move_win_rate(board, depth=0):
+def get_move_win_rate(board, depth=0, tree=None):
     empty_cell, player_turn = get_next_move(board)
     if len(empty_cell) == 0:
         return {}
@@ -34,9 +34,8 @@ def get_move_win_rate(board, depth=0):
             next_move_scores = get_move_win_rate(new_board, depth=depth + 1)
             if len(next_move_scores) != 0:
 
-                #Stupid expression in order to see with plays the players will take
                 new_board_score = min([score * player_turn for score in next_move_scores.values()]) \
-                                  #* (1 if depth % 2 == 0 else 0.8) * player_turn
+                    * (1 if depth % 2 == 0 else 0.9)
             else:
                 new_board_score = 0
 
@@ -84,20 +83,25 @@ def test():
     test_board_3 = helper.get_board("X-X"
                                     "OOO"
                                     "-X-")
-    assert get_board_score(test_board_2) == 1
-    assert get_board_score(test_board_3) == -1
-    assert get_move_win_rate(test_board_1) == [(1, 0, +1), (2, 1, +0), (0, 2, -1), (1, 2, -1), (1, 2, -1)]
+    test_board_4 = helper.get_board("X-O"
+                                    "-O-"
+                                    "--X")
+    # assert get_board_score(test_board_2) == 1
+    # assert get_board_score(test_board_3) == -1
+    # assert get_move_win_rate(test_board_1) == [(1, 0, +1), (2, 1, +0), (0, 2, -1), (1, 2, -1), (1, 2, -1)]
+
+    helper.print_board(test_board_4, get_move_win_rate(test_board_4))
 
 
 def get_player_play(board):
     helper.print_board(board)
     print("----------------")
     output = None
-    while output == None:
+    while output is None:
         entry = input("Where did you want play? ")
         try:
             entry = int(entry)
-        except:
+        except TypeError:
             print("Unvalide answere")
             continue
 
@@ -105,7 +109,7 @@ def get_player_play(board):
             print("Unvalide aswere")
             continue
 
-        pos = ((entry-1) % 3, 2 - (entry-1) // 3)
+        pos = ((entry - 1) % 3, 2 - (entry - 1) // 3)
         if board[pos] != 0:
             print("Unvalide aswere")
             continue
@@ -116,23 +120,27 @@ def get_player_play(board):
 def play_game():
     board = {pos: 0 for pos in RangeXD(3, 3)}
     i = 0
-    player_turn = -1
+    turn = 1
+    ia_turn = -1
     while get_board_score(board) == 0 and i != 9:
-        if player_turn == -1:
+        if turn == ia_turn:
             ia_plays = get_move_win_rate(board)
-            best_score = max([score * player_turn for score in ia_plays.values()]) * player_turn
+            best_score = max([score * turn for score in ia_plays.values()]) * turn
             moves = [move for move, score in ia_plays.items() if best_score == score]
             print(ia_plays)
             print(moves)
-            board[random.choice(moves)] = player_turn
+            board[random.choice(moves)] = turn
         else:
-            board[get_player_play(board)] = player_turn
-        player_turn *= -1
+            board[get_player_play(board)] = turn
+        turn *= -1
         i += 1
 
     helper.print_board(board)
 
+
 if __name__ == "__main__":
+    test()
+    exit()
     while True:
         play_game()
         print("\n\n\n\n" + "-" * 100)
