@@ -99,6 +99,7 @@ def get_line_score(line_content):
     if plays_b != 0:
         return plays_b * -1
 
+
 def get_string_ascii(board):
     line = "+-+-+-+"
     output = line
@@ -109,11 +110,12 @@ def get_string_ascii(board):
 def print_board(board):
     print(get_string_ascii(board))
 
+
 def main():
     while True:
         board = {pos: 0 for pos in RangeXD(3, 3)}
         player = 1
-        ia_id = 1
+        ia_id = -1
         while board_is_win(board) is None:
             if player == ia_id:
                 play_pos = get_best_play(board)
@@ -128,3 +130,4 @@ def main():
 
 
 main()
+

@@ -35,8 +35,8 @@ def get_move_win_rate(board, depth=0):
             if len(next_move_scores) != 0:
 
                 #Stupid expression in order to see with plays the players will take
-                new_board_score = min([score * player_turn for score in next_move_scores.values()]) * \
-                                  (1 if depth % 2 == 0 else 0.8) * player_turn
+                new_board_score = min([score * player_turn for score in next_move_scores.values()]) \
+                                  #* (1 if depth % 2 == 0 else 0.8) * player_turn
             else:
                 new_board_score = 0
 
@@ -132,7 +132,7 @@ def play_game():
 
     helper.print_board(board)
 
-
-while True:
-    play_game()
-    print("\n\n\n\n" + "-" * 100)
+if __name__ == "__main__":
+    while True:
+        play_game()
+        print("\n\n\n\n" + "-" * 100)
