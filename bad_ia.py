@@ -1,12 +1,14 @@
 from range_xd import RangeXD
 import random
 
+# The ascii symbol for players
 SYMBOLS = {
     0: "-",
     1: "X",
     -1: "O"
 }
 
+# All win lines
 LINES = [
     # Horizontal Lines
     (0, 0, 1, 0),
@@ -22,7 +24,14 @@ LINES = [
 ]
 
 
-def get_best_play(board):
+def get_best_play(board: dict) -> tuple:
+    """
+    Find the best play that of the next players in the board
+    Author: Ulysse Touzé-Buord
+    :param board:
+    :return the best play:
+    """
+    # Init variable get the count of plays a, plays b and empty cells.
     empty_cells = []
     play_a = 0
     play_b = 0
@@ -34,14 +43,17 @@ def get_best_play(board):
         else:
             play_b += 1
 
-    player_turn = -1 if play_a > play_b else 1
+    player_turn = -1 if play_a > play_b else 1 # Calculation of who is the next player
+
     play_score = {}
-    for cell in empty_cells:
+    for cell in empty_cells:  # Test all play and calculate it win score
         new_board = board.copy()
-        new_board[cell] = player_turn
-        lines_score = calc_lines(new_board)
-        is_win = player_turn * 3 in lines_score
-        is_lose = player_turn * 2 * -1 in lines_score
+        new_board[cell] = player_turn  # Copy the board and apply the play
+        lines_score = calc_lines(new_board)  # Get the line score
+
+        is_win = player_turn * 3 in lines_score  # Check if is win
+        is_lose = player_turn * 2 * -1 in lines_score # Check if is loose
+
         if is_win:
             play_score[cell] = 3
             continue
@@ -49,21 +61,25 @@ def get_best_play(board):
         if is_lose:
             play_score[cell] = -3
             continue
-        play_score[cell] = sum(lines_score) * player_turn / len(lines_score)
 
-    print(play_score)
-    max_score = max(play_score.values())
-    possible_play = []
+        play_score[cell] = sum(lines_score) * player_turn / len(lines_score)  # Calculate the final score
+
+    max_score = max(play_score.values())  # Find the max score we can get
+    possible_play = []  # Get all plays witch reach the max score
     for pos, score in play_score.items():
         if score == max_score:
             possible_play.append(pos)
-    print(possible_play)
-    return random.choice(possible_play)
 
-
+    return random.choice(possible_play)  # Return one of all best plays
 
 
 def board_is_win(board):
+    """
+    Check if the board past is a win game or not
+    Author: Ulysse Touzé-Buord
+    :param board:
+    :return players win or 0 if null else None:
+    """
     lines_score = calc_lines(board)
     full = 0 not in board.values()
     for scores in lines_score:
@@ -71,7 +87,14 @@ def board_is_win(board):
             return scores / 3
     return 0 if full else None
 
+
 def calc_lines(board):
+    """
+    Calculate the win possibility of all lines
+    Author: Ulysse Touzé-Buord
+    :param board:
+    :return list of lines score:
+    """
     lines_score = []
     for x, y, v_x, v_y in LINES:
         line_content = []
@@ -82,6 +105,14 @@ def calc_lines(board):
 
 
 def get_line_score(line_content):
+    """
+    Return the score of a line
+    0 if all players a have on it or if the line is empty
+    else return n * player for n the number of player plays.
+    Author: Ulysse Touzé-Buord
+    :param line_content:
+    :return int:
+    """
     plays_a = 0
     plays_b = 0
     for cell in line_content:
@@ -101,22 +132,30 @@ def get_line_score(line_content):
         return plays_b * -1
 
 
-def get_string_ascii(board):
+def print_board(board):
+    """
+    Print on the console a ASCII a representation of the board
+    Author: Ulysse Touzé-Buord
+    :param board:
+    """
     line = "+-+-+-+"
     output = line
     for row in range(3):
         output += f"\n|{SYMBOLS[board[0, row]]}|{SYMBOLS[board[1, row]]}|{SYMBOLS[board[2, row]]}|\n{line}"
-    return output
-
-def print_board(board):
-    print(get_string_ascii(board))
+    print(output)
 
 
 def main():
+    """
+    Main loop in order to test the IA
+    Author: Ulysse Touzé-Buord
+    """
+    # Game loop
     while True:
-        board = {pos: 0 for pos in RangeXD(3, 3)}
+        board = {pos: 0 for pos in RangeXD(3, 3)}  # Board Init
         player = 1
         ia_id = -1
+
         while board_is_win(board) is None:
             if player == ia_id:
                 play_pos = get_best_play(board)
@@ -130,5 +169,6 @@ def main():
         print_board(board)
 
 
-main()
+if __name__ == '__main__':
+    main()
 
