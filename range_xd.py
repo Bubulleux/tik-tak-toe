@@ -35,7 +35,7 @@ class RangeXD:
             step = 1
         self.counter[index] += step
 
-        if (step > 0 and  self.counter[index] >= stop) or (step < 0 and self.counter[index] <= stop):
+        if (step > 0 and self.counter[index] >= stop) or (step < 0 and self.counter[index] <= stop):
             self.counter[index] = start
             return self.next(index + 1)
         return False

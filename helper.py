@@ -54,11 +54,11 @@ def offset_string(input_string, offset):
     return output
 
 
-def get_string_ascii(board, plays=None):
-    line = "+-+-+-+"
+def get_string_ascii(board, plays=None, high_light=None):
+    line = "+-------" * 3 + "+"
     output = line
     cell_content = {}
-    print(board, "\n", plays)
+    # print(board, "\n", plays)
     if plays is None:
         plays = {}
 
@@ -66,15 +66,18 @@ def get_string_ascii(board, plays=None):
         if pos in plays:
             cell_content[pos] = str(round(plays[pos], 3)).center(7)
         else:
-            cell_content[pos] = SYMBOLS[value].center(7)
+            if high_light == pos:
+                cell_content[pos] = f"_{SYMBOLS[value]}_".center(7)
+            else:
+                cell_content[pos] = SYMBOLS[value].center(7)
 
     for row in range(3):
         output += f"\n|{cell_content[0, row]}|{cell_content[1, row]}|{cell_content[2, row]}|\n{line}"
     return output
 
 
-def print_board(board, plays=None):
-    print(get_string_ascii(board, plays=plays))
+def print_board(board, plays=None, high_light=None):
+    print(get_string_ascii(board, plays=plays, high_light=high_light))
 
 
 def get_board(string_board):
